@@ -52,6 +52,7 @@ public class ResourceIndex {
 		int lastLineOccurred = -1;
 		JResSearchNode lastNode = null;
 		int searchStrLen = searchSettings.getSearchString().length();
+		boolean isSearchHttp = searchSettings.getSearchString().startsWith("http");
 		String content;
 		try {
 			content = resNode.getContent();
@@ -66,7 +67,13 @@ public class ResourceIndex {
 				line += countLinesByPos(content, pos, lastPos);
 				lastPos = pos + searchStrLen;
 				String lineText = getLine(content, pos, lastPos);
-				if (lastLineOccurred != line) {
+				if(isSearchHttp && lineText.contains("http://schemas.")) {
+					//资源中不搜索http://schemas.
+					lastLineOccurred = line;
+					if (lastNode != null) {
+						emitter.onNext(lastNode);
+					}
+				} else if (lastLineOccurred != line) {
 					lastLineOccurred = line;
 					if (lastNode != null) {
 						emitter.onNext(lastNode);

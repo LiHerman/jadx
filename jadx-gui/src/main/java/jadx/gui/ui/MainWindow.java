@@ -109,6 +109,7 @@ import jadx.gui.ui.codearea.AbstractCodeContentPanel;
 import jadx.gui.ui.codearea.EditorViewState;
 import jadx.gui.ui.dialog.ADBDialog;
 import jadx.gui.ui.dialog.AboutDialog;
+import jadx.gui.ui.dialog.AdvSearchDialog;
 import jadx.gui.ui.dialog.LogViewerDialog;
 import jadx.gui.ui.dialog.RenameDialog;
 import jadx.gui.ui.dialog.SearchDialog;
@@ -967,6 +968,23 @@ public class MainWindow extends JFrame {
 		};
 		openDeviceAction.putValue(Action.SHORT_DESCRIPTION, NLS.str("debugger.process_selector"));
 
+		Action adSearch = new AbstractAction(NLS.str("adv.adv_search"), ICON_DEBUGGER) {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				ContentPanel panel = tabbedPane.getSelectedCodePanel();
+				if (panel instanceof AbstractCodeContentPanel) {
+					String preferText = ((AbstractCodeContentPanel) panel).getCodeArea().getSelectedText();
+					if (!StringUtils.isEmpty(preferText)) {
+						AdvSearchDialog.searchText(MainWindow.this, preferText);
+						return;
+					}
+				}
+				AdvSearchDialog.search(MainWindow.this, SearchDialog.SearchPreset.TEXT);
+			}
+		};
+		adSearch.putValue(Action.SHORT_DESCRIPTION, NLS.str("adv.adv_search"));
+		adSearch.putValue(Action.ACCELERATOR_KEY, getKeyStroke(KeyEvent.VK_F, UiUtils.ctrlButton()));
+
 		JMenu file = new JMenu(NLS.str("menu.file"));
 		file.setMnemonic(KeyEvent.VK_F);
 		file.add(openAction);
@@ -1012,12 +1030,17 @@ public class MainWindow extends JFrame {
 		help.add(logAction);
 		help.add(aboutAction);
 
+		JMenu adv = new JMenu(NLS.str("menu.wp"));
+		adv.setMnemonic(KeyEvent.VK_C);
+		adv.add(adSearch);
+
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.add(file);
 		menuBar.add(view);
 		menuBar.add(nav);
 		menuBar.add(tools);
 		menuBar.add(help);
+		menuBar.add(adv);
 		setJMenuBar(menuBar);
 
 		flatPkgButton = new JToggleButton(ICON_FLAT_PKG);
