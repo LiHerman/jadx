@@ -118,6 +118,7 @@ import jadx.gui.ui.panel.IssuesPanel;
 import jadx.gui.ui.panel.JDebuggerPanel;
 import jadx.gui.ui.panel.ProgressPanel;
 import jadx.gui.ui.popupmenu.JPackagePopupMenu;
+import jadx.gui.ui.treenodes.InterestNode;
 import jadx.gui.ui.treenodes.SummaryNode;
 import jadx.gui.update.JadxUpdate;
 import jadx.gui.update.JadxUpdate.IUpdateCallback;
@@ -452,6 +453,7 @@ public class MainWindow extends JFrame {
 	private void addTreeCustomNodes() {
 		treeRoot.replaceCustomNode(ApkSignature.getApkSignature(wrapper));
 		treeRoot.replaceCustomNode(new SummaryNode(this));
+		treeRoot.replaceCustomNode(new InterestNode(this));
 	}
 
 	private boolean ensureProjectIsSaved() {
